@@ -14,8 +14,10 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchFoods } from "../../utils/fetchFoods";
 import FoodListItem from "../../components/FoodListItem";
 import { Feather } from "@expo/vector-icons";
+import { useSupabase } from "../../lib/supabase";
 
 export default function HomeScreen() {
+  const supabase = useSupabase();
   const { userId } = useAuth();
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -43,7 +45,7 @@ export default function HomeScreen() {
   } = useQuery({
     queryKey: ["foods", userId, debouncedSearch, filters],
     queryFn: () =>
-      fetchFoods(userId!, {
+      fetchFoods(supabase, userId!, {
         search: debouncedSearch,
         ...filters,
       }),

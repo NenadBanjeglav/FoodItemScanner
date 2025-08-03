@@ -11,6 +11,7 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -41,7 +42,7 @@ export default function SignInScreen() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1"
+      className="flex-1 "
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 100}
     >
@@ -50,7 +51,10 @@ export default function SignInScreen() {
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="flex-1 justify-center px-6 py-12">
+          <View className="pt-36 px-6">
+            <View className="items-center mb-4">
+              <FontAwesome name="barcode" size={48} color="#2563eb" />
+            </View>
             <Text className="text-2xl font-bold text-primary text-center mb-6">
               Sign In
             </Text>

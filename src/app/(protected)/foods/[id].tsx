@@ -15,9 +15,11 @@ import { Feather } from "@expo/vector-icons";
 import StepButton from "../../../components/StepButton";
 import { fetchFoodById } from "../../../utils/fetchFoodById";
 import { deleteFoodById } from "../../../utils/deleteFoodById";
+import { useSupabase } from "../../../lib/supabase";
 
 export default function FoodItemDetailsScreen() {
   const queryClient = useQueryClient();
+  const supabase = useSupabase();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
@@ -27,17 +29,16 @@ export default function FoodItemDetailsScreen() {
     error,
   } = useQuery({
     queryKey: ["food", id],
-    queryFn: () => fetchFoodById(id!),
+    queryFn: () => fetchFoodById(supabase, id as string),
     enabled: !!id,
   });
-
   const { mutate: deleteFood, isPending: deleting } = useMutation({
-    mutationFn: (id: string) => deleteFoodById(id),
+    mutationFn: (id: string) => deleteFoodById(supabase, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["foods"] });
       router.replace("/");
     },
-    onError: (err) => {
+    onError: (err: any) => {
       Alert.alert("Error", err.message);
     },
   });

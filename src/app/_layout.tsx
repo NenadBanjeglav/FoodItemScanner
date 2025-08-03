@@ -1,7 +1,7 @@
 import "../../global.css";
-import { ClerkProvider } from "@clerk/clerk-expo";
+import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
-import { Slot, Stack } from "expo-router";
+import { Redirect, Slot, Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 

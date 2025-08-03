@@ -1,10 +1,13 @@
 import * as FileSystem from "expo-file-system";
-import { supabase } from "../lib/supabase";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { base64ToUint8Array } from "./utils";
 
 const BUCKET = "food-images";
 
-export const uploadImageAsync = async (uri: string): Promise<string | null> => {
+export const uploadImageAsync = async (
+  supabase: SupabaseClient,
+  uri: string
+): Promise<string | null> => {
   try {
     const fileExt = uri.split(".").pop() || "jpg";
     const fileName = `image_${Date.now()}.${fileExt}`;
@@ -15,10 +18,10 @@ export const uploadImageAsync = async (uri: string): Promise<string | null> => {
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    // 2. Convert base64 to binary using your helper
+    // 2. Convert base64 to binary
     const fileBytes = base64ToUint8Array(base64);
 
-    // 3. Upload to Supabase Storage
+    // 3. Upload with Clerk-authenticated Supabase client
     const { error } = await supabase.storage
       .from(BUCKET)
       .upload(filePath, fileBytes, {

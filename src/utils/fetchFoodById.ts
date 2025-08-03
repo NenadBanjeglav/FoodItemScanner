@@ -1,8 +1,10 @@
-// utils/fetchFoodById.ts
-import { supabase } from "../lib/supabase";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { FoodItem } from "../types/foodItem";
 
-export const fetchFoodById = async (id: string): Promise<FoodItem> => {
+export const fetchFoodById = async (
+  supabase: SupabaseClient,
+  id: string
+): Promise<FoodItem> => {
   const { data, error } = await supabase
     .from("foods")
     .select("*")
@@ -10,5 +12,5 @@ export const fetchFoodById = async (id: string): Promise<FoodItem> => {
     .single();
 
   if (error) throw new Error(error.message);
-  return data;
+  return data as FoodItem;
 };

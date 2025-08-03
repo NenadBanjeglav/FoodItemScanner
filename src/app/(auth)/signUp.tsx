@@ -10,7 +10,8 @@ import {
   Keyboard,
 } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -70,7 +71,10 @@ export default function SignUpScreen() {
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="flex-1 justify-center px-6 py-12">
+          <View className="pt-36 px-6">
+            <View className="items-center mb-4">
+              <FontAwesome name="barcode" size={48} color="#2563eb" />
+            </View>
             <Text className="text-2xl font-bold text-primary text-center mb-6">
               {pendingVerification ? "Verify Your Email" : "Sign Up"}
             </Text>
@@ -121,6 +125,19 @@ export default function SignUpScreen() {
                     Continue
                   </Text>
                 </Pressable>
+
+                <View className="flex-row justify-center mt-6">
+                  <Text className="text-gray-500">
+                    Already have an account?
+                  </Text>
+                  <Link href="/signIn" asChild>
+                    <Pressable>
+                      <Text className="text-primary font-semibold ml-1">
+                        Sign In
+                      </Text>
+                    </Pressable>
+                  </Link>
+                </View>
               </>
             )}
           </View>

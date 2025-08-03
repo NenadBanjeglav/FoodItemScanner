@@ -4,13 +4,14 @@ import { Image, Text, View } from "react-native";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import StepButton from "../../components/StepButton";
 import { uploadImageAsync } from "../../utils/uploadImage";
-import { supabase } from "../../lib/supabase";
+import { useSupabase } from "../../lib/supabase";
 import { useAuth } from "@clerk/clerk-expo";
 import DismissButton from "../../components/DismissButton";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function PreviewScreen() {
   const queryClient = useQueryClient();
+  const supabase = useSupabase();
 
   const {
     name,
@@ -44,8 +45,9 @@ export default function PreviewScreen() {
     try {
       let imageUrl: string | null = null;
 
+      // 1. Upload image
       if (imageUri) {
-        imageUrl = await uploadImageAsync(imageUri);
+        imageUrl = await uploadImageAsync(supabase, imageUri); // <-- pass supabase
         if (!imageUrl) {
           alert("Image upload failed.");
           setLoading(false);
@@ -53,6 +55,7 @@ export default function PreviewScreen() {
         }
       }
 
+      // 2. Insert food record
       const { error } = await supabase.from("foods").insert({
         user_id: userId,
         name,
@@ -73,6 +76,7 @@ export default function PreviewScreen() {
         return;
       }
 
+      // 3. Refresh cache and navigate
       queryClient.invalidateQueries({ queryKey: ["foods"] });
       alert("Food saved!");
       router.replace("/");

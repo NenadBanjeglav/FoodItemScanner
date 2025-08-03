@@ -1,11 +1,12 @@
-// utils/deleteFoodById.ts
-import { supabase } from "../lib/supabase";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-// Your storage bucket name (replace if different)
 const BUCKET = "food-images";
 
-export const deleteFoodById = async (id: string): Promise<void> => {
-  // 1. Get the food entry first
+export const deleteFoodById = async (
+  supabase: SupabaseClient,
+  id: string
+): Promise<void> => {
+  // 1. Get the food entry (to access the image URL)
   const { data: food, error: fetchError } = await supabase
     .from("foods")
     .select("image_url")
@@ -18,12 +19,14 @@ export const deleteFoodById = async (id: string): Promise<void> => {
   if (food?.image_url) {
     try {
       const filePath = extractPathFromUrl(food.image_url);
+
       const { error: storageError } = await supabase.storage
         .from(BUCKET)
         .remove([filePath]);
 
-      if (storageError)
+      if (storageError) {
         console.warn("Image deletion warning:", storageError.message);
+      }
     } catch (err) {
       console.warn("Image path parse failed:", err);
     }
