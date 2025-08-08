@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { View, ActivityIndicator, Pressable, Text } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Feather } from "@expo/vector-icons";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as FileSystem from "expo-file-system";
 import StepHeader from "../../components/StepHeader";
@@ -25,6 +25,7 @@ export default function PhotoScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [isPressed, setIsPressed] = useState(false);
   const [flashVisible, setFlashVisible] = useState(false);
+  const [active, setActive] = useState(false);
 
   const router = useRouter();
   const camera = useRef<CameraView>(null);
@@ -34,6 +35,13 @@ export default function PhotoScreen() {
       requestPermission();
     }
   }, [permission]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setActive(true);
+      return () => setActive(false);
+    }, [])
+  );
 
   const handleCapturePress = async () => {
     setIsPressed(true);
@@ -74,7 +82,15 @@ export default function PhotoScreen() {
     <SafeAreaView className="flex-1 bg-black  pt-4">
       <StepHeader step={2} total={9} />
 
-      <CameraView ref={camera} style={{ flex: 1 }} />
+      {active && (
+        <CameraView
+          ref={camera}
+          style={{ flex: 1 }}
+          facing="back"
+          onMountError={(e) => console.log("Camera mount error", e)}
+          onCameraReady={() => console.log("Camera ready")}
+        />
+      )}
 
       <View className="absolute bottom-16 w-full px-6 items-center space-y-4">
         <Pressable

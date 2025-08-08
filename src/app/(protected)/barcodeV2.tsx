@@ -29,10 +29,12 @@ export default function BarcodeV2Screen() {
 
     setScanned(true);
 
-    router.replace({
-      pathname: "/photo",
-      params: { barcode },
-    });
+    setTimeout(() => {
+      router.replace({
+        pathname: "/photo",
+        params: { barcode },
+      });
+    }, 250);
   };
 
   const handleSkip = () => {
@@ -54,13 +56,16 @@ export default function BarcodeV2Screen() {
   return (
     <SafeAreaView className="flex-1 bg-black  pt-4">
       <StepHeader step={1} total={9} />
-      <CameraView
-        style={{ flex: 1 }}
-        onBarcodeScanned={handleBarcodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e", "code128"],
-        }}
-      />
+
+      {!scanned && (
+        <CameraView
+          style={{ flex: 1 }}
+          onBarcodeScanned={handleBarcodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e", "code128"],
+          }}
+        />
+      )}
 
       {/* Scan box */}
       <View

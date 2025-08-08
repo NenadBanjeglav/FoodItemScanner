@@ -1,10 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
-
 import { useSession } from "@clerk/clerk-expo";
+import { config } from "../lib/config";
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+// const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+// const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+
+const supabaseUrl = config.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = config.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 export const useSupabase = () => {
   const { session } = useSession();

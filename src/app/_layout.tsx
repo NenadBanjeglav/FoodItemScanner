@@ -1,9 +1,20 @@
 import "../../global.css";
-import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
+import { ClerkProvider } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
-import { Redirect, Slot, Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
+
+import Constants from "expo-constants";
+
+console.log(
+  "🔍 Supabase URL:",
+  Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_URL
+);
+console.log(
+  "🔍 Clerk Key:",
+  Constants.expoConfig?.extra?.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
