@@ -7,14 +7,9 @@ import { useReactQueryDevTools } from "@dev-plugins/react-query";
 
 import Constants from "expo-constants";
 
-console.log(
-  "🔍 Supabase URL:",
-  Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_URL
-);
-console.log(
-  "🔍 Clerk Key:",
-  Constants.expoConfig?.extra?.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
-);
+const publishableKey =
+  Constants.expoConfig?.extra?.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,8 +24,12 @@ const queryClient = new QueryClient({
 export default function RootLayout() {
   useReactQueryDevTools(queryClient);
 
+  if (!publishableKey) {
+    console.error("Clerk publishable key is missing");
+  }
+
   return (
-    <ClerkProvider tokenCache={tokenCache}>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <QueryClientProvider client={queryClient}>
         <Slot />
       </QueryClientProvider>
